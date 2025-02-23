@@ -33,7 +33,7 @@ export default function Home() {
   }, [debouncedSearchTerm])
   return (
     <>
-      <div className="mx-auto max-w-sm max-sm:p-2 sm:my-2">
+      <div className="mx-auto max-w-sm max-sm:mt-2 sm:my-2">
         <Input
           className="truncate"
           value={searchTerm}
