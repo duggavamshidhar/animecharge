@@ -6,11 +6,9 @@ async function fetchData<T>(url: string): Promise<T> {
 }
 
 export async function getSearchResults(query: string) {
-  return await fetchData<getSearchResultsType>(
-    `https://api.jikan.moe/v4/anime?sfw=false&q=${query}`
-  )
+  return await fetchData<getSearchResultsType>(`https://api.jikan.moe/v4/anime?sfw=true&q=${query}`)
 }
 
 export async function getRandomAnime(): Promise<getRandomAnimeType> {
-  return await fetchData<getRandomAnimeType>(`https://api.jikan.moe/v4/random/anime?sfw=false`)
+  return await fetchData<getRandomAnimeType>(`https://api.jikan.moe/v4/random/anime?sfw=true`)
 }
