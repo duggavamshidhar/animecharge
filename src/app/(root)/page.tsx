@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [data, setData] = useState<SearchResultsType | undefined>()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const debouncedSearchTerm = useDebounce(searchTerm, 1500)
   const { AnimeTitle } = useAnimeTitle()
 
@@ -24,12 +24,11 @@ export default function Home() {
   }, [AnimeTitle])
 
   useEffect(() => {
+    setLoading(true)
     async function getData() {
-      setLoading(true)
       setData(await getSearchResults(debouncedSearchTerm))
-      setLoading(false)
     }
-    getData()
+    getData().then(() => setLoading(false))
   }, [debouncedSearchTerm])
   return (
     <>
@@ -56,29 +55,33 @@ export default function Home() {
               </div>
             ))}
         </div>
-      ) : data?.data && data?.data.length > 0 ? (
-        <div className="mx-auto mb-2 grid max-w-5xl grid-cols-2 gap-2 max-sm:p-2 sm:grid-cols-3 sm:px-2 md:grid-cols-4 lg:grid-cols-5">
-          {data?.data.slice(0, 20).map((item, index) => (
-            <div className="flex flex-col space-y-2" key={index}>
-              <Link href={item.url} target="_blank">
-                <img
-                  src={item.images.jpg.large_image_url}
-                  alt={item.title}
-                  className="aspect-[2/3] w-full rounded-xl"
-                />
-              </Link>
-              <div className="space-y-2">
-                <div className="w-full truncate text-sm">
-                  <Link href={item.url} target="_blank">
-                    {item.title}
-                  </Link>
+      ) : debouncedSearchTerm && data?.data?.length === 0 ? (
+        <div className="py-1 text-center">No results found</div>
+      ) : (
+        data?.data &&
+        data?.data.length > 0 &&
+        !loading && (
+          <div className="mx-auto mb-2 grid max-w-5xl grid-cols-2 gap-2 max-sm:p-2 sm:grid-cols-3 sm:px-2 md:grid-cols-4 lg:grid-cols-5">
+            {data?.data.slice(0, 20).map((item, index) => (
+              <div className="flex flex-col space-y-2" key={index}>
+                <Link href={item.url} target="_blank">
+                  <img
+                    src={item.images.jpg.large_image_url}
+                    alt={item.title}
+                    className="aspect-[2/3] w-full rounded-xl"
+                  />
+                </Link>
+                <div className="space-y-2">
+                  <div className="w-full truncate text-sm">
+                    <Link href={item.url} target="_blank">
+                      {item.title}
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="py-1 text-center">No results found</div>
+            ))}
+          </div>
+        )
       )}
     </>
   )

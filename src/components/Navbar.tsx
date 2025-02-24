@@ -17,6 +17,7 @@ import { getRandomAnimeType } from '@/types/v1'
 import { Github, Home, Infinity, Linkedin, Menu } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+
 export default function Navbar() {
   async function randomAnime() {
     const randomData: getRandomAnimeType = await getRandomAnime()
